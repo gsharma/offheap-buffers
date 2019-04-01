@@ -8,3 +8,4 @@ package com.github.offheapbuffers;
 public class RingBuffer {
   // TODO
 }
+
