@@ -1,11 +1,19 @@
 package com.github.offheapbuffers;
 
 /**
- * Off-heap ring-buffer implementation.
+ * Ring Buffer skeleton.
  * 
  * @author gaurav
  */
-public class RingBuffer {
-  // TODO
-}
+public interface RingBuffer {
+  void enqueue(Object element);
 
+  Object dequeue();
+
+  int currentSize();
+
+  boolean isFull();
+
+  boolean isEmpty();
+
+}
