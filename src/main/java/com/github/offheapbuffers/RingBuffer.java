@@ -5,15 +5,36 @@ package com.github.offheapbuffers;
  * 
  * @author gaurav
  */
-public interface RingBuffer {
-  void enqueue(Object element);
+public interface RingBuffer<T> {
 
-  Object dequeue();
+  /**
+   * Enqueue an element to this buffer
+   */
+  void enqueue(T element);
 
+  /**
+   * Dequeue an element from this buffer
+   */
+  T dequeue();
+
+  /**
+   * Get the current number of elements in this buffer.
+   */
   int currentSize();
 
+  /**
+   * Get the capacity of this buffer. Note that for post-construction, this is immutable.
+   */
+  int capacity();
+
+  /**
+   * Determine if the buffer is full.
+   */
   boolean isFull();
 
+  /**
+   * Determine if the buffer is empty.
+   */
   boolean isEmpty();
 
 }
