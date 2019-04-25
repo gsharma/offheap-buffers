@@ -8,6 +8,7 @@ package com.github.offheapbuffers;
 public class RingBufferImpl implements RingBuffer<Object> {
   private final Storage storage;
   private final int capacity;
+  private int currentSize;
 
   // possibly have multiple read pointers, 1 each for a reader
   private int readPointer;
@@ -15,26 +16,45 @@ public class RingBufferImpl implements RingBuffer<Object> {
   // assume a single writer
   private int writePointer;
 
+  private final Object[] buffer;
+
   public RingBufferImpl(final Storage storage, final int capacity) {
     this.storage = storage;
     this.capacity = capacity;
+    buffer = new Object[capacity];
   }
 
   @Override
-  public void enqueue(Object element) {
+  public void enqueue(final Object element) {
     // TODO
+    writePointer = (writePointer + 1) % capacity;
+    buffer[writePointer] = element;
+    if (currentSize < buffer.length) {
+      currentSize++;
+    }
   }
 
   @Override
   public Object dequeue() {
     // TODO
-    return null;
+    Object dequeued = null;
+    int nextReadCandidate = (readPointer + 1) % capacity;
+    if (nextReadCandidate < buffer.length) {
+      if (buffer[nextReadCandidate] != null) {
+        readPointer = nextReadCandidate;
+        dequeued = buffer[readPointer];
+        buffer[readPointer] = null;
+        if (currentSize > 0) {
+          currentSize--;
+        }
+      }
+    }
+    return dequeued;
   }
 
   @Override
   public int currentSize() {
-    // TODO
-    return 0;
+    return currentSize;
   }
 
   @Override
@@ -42,16 +62,16 @@ public class RingBufferImpl implements RingBuffer<Object> {
     return capacity;
   }
 
+  // unnecessary and can be deduced from currentSize, capacity
   @Override
   public boolean isFull() {
-    // TODO
-    return false;
+    return currentSize() == capacity();
   }
 
+  // unnecessary and can be deduced from currentSize
   @Override
   public boolean isEmpty() {
-    // TODO
-    return false;
+    return currentSize() == 0;
   }
 
 }
