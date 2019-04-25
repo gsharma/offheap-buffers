@@ -33,10 +33,15 @@ public class RingBufferTest {
 
     // 2. unload buffer
     assertEquals("1", buffer.dequeue()); // readPointer at start
+    assertEquals(size - 1, buffer.currentSize());
     assertEquals("2", buffer.dequeue());
+    assertEquals(size - 2, buffer.currentSize());
     assertEquals("3", buffer.dequeue());
+    assertEquals(size - 3, buffer.currentSize());
     assertEquals("4", buffer.dequeue());
+    assertEquals(size - 4, buffer.currentSize());
     assertEquals("5", buffer.dequeue());
+    assertEquals(size - 5, buffer.currentSize());
     assertTrue(buffer.isEmpty());
     assertFalse(buffer.isFull());
     assertNull(buffer.dequeue());
