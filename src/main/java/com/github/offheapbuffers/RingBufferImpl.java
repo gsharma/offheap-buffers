@@ -1,7 +1,7 @@
 package com.github.offheapbuffers;
 
 /**
- * Off-heap ring-buffer implementation.
+ * On-heap fixed-size simple ring-buffer implementation.
  * 
  * @author gaurav
  */
@@ -50,6 +50,18 @@ public class RingBufferImpl implements RingBuffer<Object> {
       }
     }
     return dequeued;
+  }
+
+  @Override
+  public Object peek() {
+    Object peeked = null;
+    int nextReadCandidate = (readPointer + 1) % capacity;
+    if (nextReadCandidate < buffer.length) {
+      if (buffer[nextReadCandidate] != null) {
+        peeked = buffer[nextReadCandidate];
+      }
+    }
+    return peeked;
   }
 
   @Override

@@ -18,7 +18,12 @@ public interface RingBuffer<T> {
   T dequeue();
 
   /**
-   * Get the current number of elements in this buffer.
+   * Peek without dequeueing from the buffer
+   */
+  T peek();
+
+  /**
+   * Get the current number of elements in this buffer
    */
   int currentSize();
 

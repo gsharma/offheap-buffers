@@ -15,7 +15,42 @@ import org.junit.Test;
 public class RingBufferTest {
 
   @Test
-  public void testMemoryBuffer() {
+  public void testMemoryBufferPeek() {
+    int size = 5;
+    final RingBuffer buffer = new RingBufferImpl(null, size);
+    assertTrue(buffer.isEmpty());
+    assertFalse(buffer.isFull());
+
+    // 1. load buffer
+    buffer.enqueue("1");
+    buffer.enqueue("2");
+    buffer.enqueue("3");
+    buffer.enqueue("4");
+    buffer.enqueue("5"); // writePointer to end
+    assertFalse(buffer.isEmpty());
+    assertTrue(buffer.isFull());
+    assertEquals(size, buffer.currentSize());
+
+    // 2. peek and unload buffer
+    assertEquals("1", buffer.peek()); // readPointer at start
+    assertEquals("1", buffer.peek());
+    assertEquals(size, buffer.currentSize());
+    assertEquals("1", buffer.dequeue());
+    assertEquals(size - 1, buffer.currentSize());
+    assertEquals("2", buffer.peek());
+    assertEquals(size - 1, buffer.currentSize());
+    assertEquals("2", buffer.dequeue());
+    assertEquals("3", buffer.dequeue());
+    assertEquals("4", buffer.dequeue());
+    assertEquals("5", buffer.dequeue());
+    assertTrue(buffer.isEmpty());
+    assertFalse(buffer.isFull());
+    assertNull(buffer.peek());
+    assertNull(buffer.dequeue());
+  }
+
+  @Test
+  public void testMemoryBufferDrain() {
     int size = 5;
     final RingBuffer buffer = new RingBufferImpl(null, size);
     assertTrue(buffer.isEmpty());
