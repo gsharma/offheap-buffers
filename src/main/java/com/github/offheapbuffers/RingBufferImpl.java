@@ -1,11 +1,15 @@
 package com.github.offheapbuffers;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * On-heap fixed-size simple ring-buffer implementation.
  * 
  * @author gaurav
  */
 public class RingBufferImpl implements RingBuffer<Object> {
+  private static final Logger logger = LogManager.getLogger(RingBuffer.class.getSimpleName());
   private final Storage storage;
   private final int capacity;
   private int currentSize;
