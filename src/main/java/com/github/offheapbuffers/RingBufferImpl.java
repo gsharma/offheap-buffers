@@ -30,7 +30,6 @@ public class RingBufferImpl implements RingBuffer<Object> {
 
   @Override
   public void enqueue(final Object element) {
-    // TODO
     writePointer = (writePointer + 1) % capacity;
     buffer[writePointer] = element;
     if (currentSize < buffer.length) {
@@ -40,7 +39,6 @@ public class RingBufferImpl implements RingBuffer<Object> {
 
   @Override
   public Object dequeue() {
-    // TODO
     Object dequeued = null;
     int nextReadCandidate = (readPointer + 1) % capacity;
     if (nextReadCandidate < buffer.length) {
