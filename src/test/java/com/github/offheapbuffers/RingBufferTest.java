@@ -17,7 +17,7 @@ public class RingBufferTest {
   @Test
   public void testMemoryBufferPeek() {
     int size = 5;
-    final RingBuffer buffer = new RingBufferImpl(null, size);
+    final RingBuffer buffer = new HeapRingBuffer(null, size);
     assertTrue(buffer.isEmpty());
     assertFalse(buffer.isFull());
 
@@ -52,7 +52,7 @@ public class RingBufferTest {
   @Test
   public void testMemoryBufferDrain() {
     int size = 5;
-    final RingBuffer buffer = new RingBufferImpl(null, size);
+    final RingBuffer buffer = new HeapRingBuffer(null, size);
     assertTrue(buffer.isEmpty());
     assertFalse(buffer.isFull());
 
