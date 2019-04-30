@@ -20,20 +20,20 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
   private final WriteLock writeLock = superLock.writeLock();
   private final ReadLock readLock = superLock.readLock();
 
-  private final Storage storage;
+  // private final Storage storage;
   private final int capacity;
   private volatile int currentSize;
 
-  // possibly have multiple read pointers, 1 each for a reader
+  // assume a single read pointer
   private int readPointer;
 
-  // assume a single writer
+  // assume a single write pointer
   private int writePointer;
 
   private final Object[] buffer;
 
-  public HeapRingBuffer(final Storage storage, final int capacity) {
-    this.storage = storage;
+  public HeapRingBuffer(/* final Storage storage, */ final int capacity) {
+    // this.storage = storage;
     this.capacity = capacity;
     buffer = new Object[capacity];
   }
