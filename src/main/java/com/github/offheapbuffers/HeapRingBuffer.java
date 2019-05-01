@@ -123,6 +123,22 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
   }
 
   @Override
+  public void clear() {
+    if (writeLock.tryLock()) {
+      try {
+        for (int iter = 0; iter < buffer.length; iter++) {
+          buffer[iter] = null;
+        }
+        currentSize = 0;
+      } finally {
+        writeLock.unlock();
+      }
+    } else {
+      logger.error("Failed to acquire lock to clear the buffer");
+    }
+  }
+
+  @Override
   public String toString() {
     final StringBuilder builder = new StringBuilder();
     builder.append("HeapRingBuffer:");

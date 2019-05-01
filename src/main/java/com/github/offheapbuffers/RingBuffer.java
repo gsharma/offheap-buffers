@@ -42,4 +42,9 @@ public interface RingBuffer<T> {
    */
   boolean isEmpty();
 
+  /**
+   * Delete elements if any, in the buffer.
+   */
+  void clear();
+
 }
