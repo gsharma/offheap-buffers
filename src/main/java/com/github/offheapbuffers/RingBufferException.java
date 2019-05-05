@@ -32,6 +32,14 @@ public final class RingBufferException extends Exception {
   }
 
   public static enum Code {
+    // 1.
+    ENQUEUE_LOCK_FAILED("Failed to acquire write lock for enqueueing to ring buffer"),
+    // 2.
+    DEQUEUE_LOCK_FAILED("Failed to acquire write lock for dequeueing from ring buffer"),
+    // 3.
+    PEEK_LOCK_FAILED("Failed to acquire read lock for peeking into ring buffer"),
+    // 4.
+    CLEAR_LOCK_FAILED("Failed to acquire write lock for clearing ring buffer"),
     // n.
     UNKNOWN_FAILURE(
         "Ring buffer failed. Check exception stacktrace for more details of the failure");

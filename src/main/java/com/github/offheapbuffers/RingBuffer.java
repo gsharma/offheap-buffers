@@ -10,17 +10,17 @@ public interface RingBuffer<T> {
   /**
    * Enqueue an element to this buffer
    */
-  void enqueue(T element);
+  void enqueue(T element) throws RingBufferException;
 
   /**
    * Dequeue an element from this buffer
    */
-  T dequeue();
+  T dequeue() throws RingBufferException;
 
   /**
    * Peek without dequeueing from the buffer
    */
-  T peek();
+  T peek() throws RingBufferException;
 
   /**
    * Get the current number of elements in this buffer
@@ -45,6 +45,6 @@ public interface RingBuffer<T> {
   /**
    * Delete elements if any, in the buffer.
    */
-  void clear();
+  void clear() throws RingBufferException;
 
 }

@@ -8,8 +8,11 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.github.offheapbuffers.RingBufferException.Code;
+
 /**
- * On-heap fixed-size simple ring-buffer implementation.
+ * On-heap fixed-size simple ring-buffer implementation that's best used as a single producer single
+ * consumer (spsc) ring-buffer.
  * 
  * @author gaurav
  */
@@ -39,7 +42,7 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
   }
 
   @Override
-  public void enqueue(final Object element) {
+  public void enqueue(final Object element) throws RingBufferException {
     if (writeLock.tryLock()) {
       try {
         writePointer = (writePointer + 1) % capacity;
@@ -52,11 +55,12 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
       }
     } else {
       logger.error("Failed to acquire lock to enqueue {}", element);
+      throw new RingBufferException(Code.ENQUEUE_LOCK_FAILED);
     }
   }
 
   @Override
-  public Object dequeue() {
+  public Object dequeue() throws RingBufferException {
     Object dequeued = null;
     if (writeLock.tryLock()) {
       try {
@@ -76,12 +80,13 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
       }
     } else {
       logger.error("Failed to acquire lock to dequeue from buffer");
+      throw new RingBufferException(Code.DEQUEUE_LOCK_FAILED);
     }
     return dequeued;
   }
 
   @Override
-  public Object peek() {
+  public Object peek() throws RingBufferException {
     Object peeked = null;
     if (readLock.tryLock()) {
       try {
@@ -96,6 +101,7 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
       }
     } else {
       logger.error("Failed to acquire lock to peek into buffer");
+      throw new RingBufferException(Code.PEEK_LOCK_FAILED);
     }
     return peeked;
   }
@@ -110,20 +116,8 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
     return capacity;
   }
 
-  // unnecessary and can be deduced from currentSize, capacity
   @Override
-  public boolean isFull() {
-    return currentSize() == capacity();
-  }
-
-  // unnecessary and can be deduced from currentSize
-  @Override
-  public boolean isEmpty() {
-    return currentSize() == 0;
-  }
-
-  @Override
-  public void clear() {
+  public void clear() throws RingBufferException {
     if (writeLock.tryLock()) {
       try {
         for (int iter = 0; iter < buffer.length; iter++) {
@@ -135,6 +129,7 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
       }
     } else {
       logger.error("Failed to acquire lock to clear the buffer");
+      throw new RingBufferException(Code.CLEAR_LOCK_FAILED);
     }
   }
 
@@ -144,6 +139,18 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
     builder.append("HeapRingBuffer:");
     builder.append(Arrays.deepToString(buffer));
     return builder.toString();
+  }
+
+  // unnecessary and can be deduced from currentSize, capacity
+  @Override
+  public boolean isFull() {
+    return currentSize() == capacity();
+  }
+
+  // unnecessary and can be deduced from currentSize
+  @Override
+  public boolean isEmpty() {
+    return currentSize() == 0;
   }
 
 }

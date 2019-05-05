@@ -15,7 +15,7 @@ import org.junit.Test;
 public class RingBufferTest {
 
   @Test
-  public void testMemoryBufferPeek() {
+  public void testHeapBufferPeek() throws RingBufferException {
     int size = 5;
     final RingBuffer buffer = new HeapRingBuffer(size);
     assertTrue(buffer.isEmpty());
@@ -50,7 +50,7 @@ public class RingBufferTest {
   }
 
   @Test
-  public void testMemoryBufferDrain() {
+  public void testHeapBufferDrain() throws RingBufferException {
     int size = 5;
     final RingBuffer buffer = new HeapRingBuffer(size);
     assertTrue(buffer.isEmpty());
