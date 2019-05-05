@@ -125,4 +125,17 @@ public class RingBufferTest {
     assertNull(buffer.dequeue());
   }
 
+  @Test
+  public void testHeapBufferNoOverflow() throws RingBufferException {
+    final RingBuffer buffer = new HeapRingBuffer(9);
+    assertTrue(buffer.isEmpty());
+    assertFalse(buffer.isFull());
+    for (int iter = 0; iter < 500; iter++) {
+      buffer.enqueue(iter);
+    }
+    assertFalse(buffer.isEmpty());
+    assertTrue(buffer.isFull());
+    System.out.println(buffer);
+  }
+
 }
