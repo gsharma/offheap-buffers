@@ -35,7 +35,11 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
 
   private final Object[] buffer;
 
-  public HeapRingBuffer(/* final Storage storage, */ final int capacity) {
+  public HeapRingBuffer(/* final Storage storage, */ final int capacity)
+      throws RingBufferException {
+    if (capacity <= 0) {
+      throw new RingBufferException(Code.INVALID_BUFFER_SIZE);
+    }
     // this.storage = storage;
     this.capacity = capacity;
     buffer = new Object[capacity];

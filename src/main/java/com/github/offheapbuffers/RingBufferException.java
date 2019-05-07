@@ -32,6 +32,8 @@ public final class RingBufferException extends Exception {
   }
 
   public static enum Code {
+    // 0.
+    INVALID_BUFFER_SIZE("Ring buffer size is less than or equal to zero"),
     // 1.
     ENQUEUE_LOCK_FAILED("Failed to acquire write lock for enqueueing to ring buffer"),
     // 2.
