@@ -63,6 +63,9 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
             break;
           }
           case BLOCK: {
+            if (nextWriteCandidate == readPointer) {
+              // don't clobber unread data
+            }
             break;
           }
           case RESIZE: {
