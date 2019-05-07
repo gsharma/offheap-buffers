@@ -17,7 +17,7 @@ public final class RingBufferTest {
   @Test
   public void testHeapBufferPeek() throws RingBufferException {
     int size = 5;
-    final RingBuffer buffer = new HeapRingBuffer(size);
+    final RingBuffer buffer = new HeapRingBuffer(RingBufferMode.OVERWRITE, size);
     assertTrue(buffer.isEmpty());
     assertFalse(buffer.isFull());
 
@@ -52,7 +52,7 @@ public final class RingBufferTest {
   @Test
   public void testHeapBufferDrain() throws RingBufferException {
     int size = 5;
-    final RingBuffer buffer = new HeapRingBuffer(size);
+    final RingBuffer buffer = new HeapRingBuffer(RingBufferMode.OVERWRITE, size);
     assertTrue(buffer.isEmpty());
     assertFalse(buffer.isFull());
 
@@ -127,7 +127,7 @@ public final class RingBufferTest {
 
   @Test
   public void testHeapBufferNoOverflow() throws RingBufferException {
-    final RingBuffer buffer = new HeapRingBuffer(9);
+    final RingBuffer buffer = new HeapRingBuffer(RingBufferMode.OVERWRITE, 9);
     assertTrue(buffer.isEmpty());
     assertFalse(buffer.isFull());
     for (int iter = 0; iter < 100; iter++) {

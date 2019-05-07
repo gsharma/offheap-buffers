@@ -23,6 +23,8 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
   private final WriteLock writeLock = superLock.writeLock();
   private final ReadLock readLock = superLock.readLock();
 
+  private final RingBufferMode mode;
+
   // private final Storage storage;
   private final int capacity;
   private volatile int currentSize;
@@ -35,8 +37,9 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
 
   private final Object[] buffer;
 
-  public HeapRingBuffer(/* final Storage storage, */ final int capacity)
+  public HeapRingBuffer(/* final Storage storage, */ final RingBufferMode mode, final int capacity)
       throws RingBufferException {
+    this.mode = mode;
     if (capacity <= 0) {
       throw new RingBufferException(Code.INVALID_BUFFER_SIZE);
     }
@@ -49,10 +52,22 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
   public void enqueue(final Object element) throws RingBufferException {
     if (writeLock.tryLock()) {
       try {
-        writePointer = (writePointer + 1) % capacity;
-        buffer[writePointer] = element;
-        if (currentSize < buffer.length) {
-          currentSize++;
+        final int nextWriteCandidate = (writePointer + 1) % capacity;
+        switch (mode) {
+          case OVERWRITE: {
+            writePointer = nextWriteCandidate;
+            buffer[writePointer] = element;
+            if (currentSize < buffer.length) {
+              currentSize++;
+            }
+            break;
+          }
+          case BLOCK: {
+            break;
+          }
+          case RESIZE: {
+            break;
+          }
         }
       } finally {
         writeLock.unlock();
@@ -68,7 +83,7 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
     Object dequeued = null;
     if (writeLock.tryLock()) {
       try {
-        int nextReadCandidate = (readPointer + 1) % capacity;
+        final int nextReadCandidate = (readPointer + 1) % capacity;
         if (nextReadCandidate < buffer.length) {
           if (buffer[nextReadCandidate] != null) {
             readPointer = nextReadCandidate;
@@ -155,6 +170,11 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
   @Override
   public boolean isEmpty() {
     return currentSize() == 0;
+  }
+
+  @Override
+  public RingBufferMode getMode() {
+    return mode;
   }
 
 }

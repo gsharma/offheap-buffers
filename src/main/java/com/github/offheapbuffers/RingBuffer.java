@@ -8,6 +8,11 @@ package com.github.offheapbuffers;
 public interface RingBuffer<T> {
 
   /**
+   * Mode of operation of this buffer
+   */
+  RingBufferMode getMode();
+
+  /**
    * Enqueue an element to this buffer
    */
   void enqueue(T element) throws RingBufferException;

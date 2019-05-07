@@ -53,4 +53,10 @@ public final class OffheapRingBuffer implements RingBuffer<Object> {
     // TODO
   }
 
+  @Override
+  public RingBufferMode getMode() {
+    // TODO
+    return null;
+  }
+
 }
