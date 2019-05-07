@@ -2,6 +2,6 @@
 
 Note that this is a WIP project and not yet available for general consumption (meaning please don't look just yet).
 
-Offheap Buffers
+Off-heap Buffers
 1. Ring buffer
 

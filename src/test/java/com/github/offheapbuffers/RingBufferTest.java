@@ -12,7 +12,7 @@ import org.junit.Test;
  * 
  * @author gaurav
  */
-public class RingBufferTest {
+public final class RingBufferTest {
 
   @Test
   public void testHeapBufferPeek() throws RingBufferException {
@@ -130,12 +130,11 @@ public class RingBufferTest {
     final RingBuffer buffer = new HeapRingBuffer(9);
     assertTrue(buffer.isEmpty());
     assertFalse(buffer.isFull());
-    for (int iter = 0; iter < 500; iter++) {
+    for (int iter = 0; iter < 100; iter++) {
       buffer.enqueue(iter);
     }
     assertFalse(buffer.isEmpty());
     assertTrue(buffer.isFull());
-    System.out.println(buffer);
   }
 
 }
