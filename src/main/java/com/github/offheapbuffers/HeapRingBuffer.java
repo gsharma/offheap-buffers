@@ -16,7 +16,7 @@ import com.github.offheapbuffers.RingBufferException.Code;
  * 
  * @author gaurav
  */
-public final class HeapRingBuffer implements RingBuffer<Object> {
+public final class HeapRingBuffer<T> implements RingBuffer<T> {
   private static final Logger logger = LogManager.getLogger(RingBuffer.class.getSimpleName());
 
   private final ReentrantReadWriteLock superLock = new ReentrantReadWriteLock(true);
@@ -49,7 +49,7 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
   }
 
   @Override
-  public void enqueue(final Object element) throws RingBufferException {
+  public void enqueue(final T element) throws RingBufferException {
     if (writeLock.tryLock()) {
       try {
         final int nextWriteCandidate = (writePointer + 1) % capacity;
@@ -82,7 +82,7 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
   }
 
   @Override
-  public Object dequeue() throws RingBufferException {
+  public T dequeue() throws RingBufferException {
     Object dequeued = null;
     if (writeLock.tryLock()) {
       try {
@@ -104,11 +104,11 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
       logger.error("Failed to acquire lock to dequeue from buffer");
       throw new RingBufferException(Code.DEQUEUE_LOCK_FAILED);
     }
-    return dequeued;
+    return (T) dequeued;
   }
 
   @Override
-  public Object peek() throws RingBufferException {
+  public T peek() throws RingBufferException {
     Object peeked = null;
     if (readLock.tryLock()) {
       try {
@@ -125,7 +125,7 @@ public final class HeapRingBuffer implements RingBuffer<Object> {
       logger.error("Failed to acquire lock to peek into buffer");
       throw new RingBufferException(Code.PEEK_LOCK_FAILED);
     }
-    return peeked;
+    return (T) peeked;
   }
 
   @Override
