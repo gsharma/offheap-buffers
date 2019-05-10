@@ -163,18 +163,6 @@ public final class HeapRingBuffer<T> implements RingBuffer<T> {
     return builder.toString();
   }
 
-  // unnecessary and can be deduced from currentSize, capacity
-  @Override
-  public boolean isFull() {
-    return currentSize() == capacity();
-  }
-
-  // unnecessary and can be deduced from currentSize
-  @Override
-  public boolean isEmpty() {
-    return currentSize() == 0;
-  }
-
   @Override
   public RingBufferMode getMode() {
     return mode;

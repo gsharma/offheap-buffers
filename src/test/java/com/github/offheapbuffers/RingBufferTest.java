@@ -1,9 +1,7 @@
 package com.github.offheapbuffers;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -18,8 +16,7 @@ public final class RingBufferTest {
   public void testHeapBufferPeek() throws RingBufferException {
     int size = 5;
     final RingBuffer<String> buffer = new HeapRingBuffer<String>(RingBufferMode.OVERWRITE, size);
-    assertTrue(buffer.isEmpty());
-    assertFalse(buffer.isFull());
+    assertEquals(0, buffer.currentSize());
 
     // 1. load buffer
     buffer.enqueue("1");
@@ -27,8 +24,7 @@ public final class RingBufferTest {
     buffer.enqueue("3");
     buffer.enqueue("4");
     buffer.enqueue("5"); // writePointer to end
-    assertFalse(buffer.isEmpty());
-    assertTrue(buffer.isFull());
+    assertEquals(buffer.capacity(), buffer.currentSize());
     assertEquals(size, buffer.currentSize());
 
     // 2. peek and unload buffer
@@ -43,8 +39,8 @@ public final class RingBufferTest {
     assertEquals("3", buffer.dequeue());
     assertEquals("4", buffer.dequeue());
     assertEquals("5", buffer.dequeue());
-    assertTrue(buffer.isEmpty());
-    assertFalse(buffer.isFull());
+    assertEquals(0, buffer.currentSize());
+
     assertNull(buffer.peek());
     assertNull(buffer.dequeue());
   }
@@ -53,8 +49,7 @@ public final class RingBufferTest {
   public void testHeapBufferDrain() throws RingBufferException {
     int size = 5;
     final RingBuffer<String> buffer = new HeapRingBuffer<String>(RingBufferMode.OVERWRITE, size);
-    assertTrue(buffer.isEmpty());
-    assertFalse(buffer.isFull());
+    assertEquals(0, buffer.currentSize());
 
     // 1. load buffer
     buffer.enqueue("1");
@@ -62,9 +57,7 @@ public final class RingBufferTest {
     buffer.enqueue("3");
     buffer.enqueue("4");
     buffer.enqueue("5"); // writePointer to end
-    assertFalse(buffer.isEmpty());
-    assertTrue(buffer.isFull());
-    assertEquals(size, buffer.currentSize());
+    assertEquals(buffer.capacity(), buffer.currentSize());
 
     // 2. unload buffer
     assertEquals("1", buffer.dequeue()); // readPointer at start
@@ -77,8 +70,7 @@ public final class RingBufferTest {
     assertEquals(size - 4, buffer.currentSize());
     assertEquals("5", buffer.dequeue());
     assertEquals(size - 5, buffer.currentSize());
-    assertTrue(buffer.isEmpty());
-    assertFalse(buffer.isFull());
+    assertEquals(0, buffer.currentSize());
     assertNull(buffer.dequeue());
 
     // 3. rinse and repeat of 1.
@@ -87,8 +79,7 @@ public final class RingBufferTest {
     buffer.enqueue("3");
     buffer.enqueue("4");
     buffer.enqueue("5");
-    assertFalse(buffer.isEmpty());
-    assertTrue(buffer.isFull());
+    assertEquals(buffer.capacity(), buffer.currentSize());
 
     // 4. rinse and repeat of 2.
     assertEquals("1", buffer.dequeue());
@@ -96,8 +87,7 @@ public final class RingBufferTest {
     assertEquals("3", buffer.dequeue());
     assertEquals("4", buffer.dequeue());
     assertEquals("5", buffer.dequeue());
-    assertTrue(buffer.isEmpty());
-    assertFalse(buffer.isFull());
+    assertEquals(0, buffer.currentSize());
 
     // 5. wrap-around
     buffer.enqueue("1");
@@ -110,9 +100,7 @@ public final class RingBufferTest {
     buffer.enqueue("8");
     buffer.enqueue("9");
     buffer.enqueue("10");
-    assertFalse(buffer.isEmpty());
-    assertTrue(buffer.isFull());
-    assertEquals(size, buffer.currentSize());
+    assertEquals(buffer.capacity(), buffer.currentSize());
 
     // 6. unload buffer
     assertEquals("6", buffer.dequeue()); // readPointer at start
@@ -120,21 +108,18 @@ public final class RingBufferTest {
     assertEquals("8", buffer.dequeue());
     assertEquals("9", buffer.dequeue());
     assertEquals("10", buffer.dequeue());
-    assertTrue(buffer.isEmpty());
-    assertFalse(buffer.isFull());
+    assertEquals(0, buffer.currentSize());
     assertNull(buffer.dequeue());
   }
 
   @Test
   public void testHeapBufferNoOverflow() throws RingBufferException {
     final RingBuffer<Integer> buffer = new HeapRingBuffer<Integer>(RingBufferMode.OVERWRITE, 9);
-    assertTrue(buffer.isEmpty());
-    assertFalse(buffer.isFull());
+    assertEquals(0, buffer.currentSize());
     for (int iter = 0; iter < 100; iter++) {
       buffer.enqueue(iter);
     }
-    assertFalse(buffer.isEmpty());
-    assertTrue(buffer.isFull());
+    assertEquals(buffer.capacity(), buffer.currentSize());
   }
 
 }

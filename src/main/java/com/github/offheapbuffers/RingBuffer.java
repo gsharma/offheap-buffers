@@ -40,12 +40,12 @@ public interface RingBuffer<T> {
   /**
    * Determine if the buffer is full.
    */
-  boolean isFull();
+  // boolean isFull();
 
   /**
    * Determine if the buffer is empty.
    */
-  boolean isEmpty();
+  // boolean isEmpty();
 
   /**
    * Delete elements if any, in the buffer.

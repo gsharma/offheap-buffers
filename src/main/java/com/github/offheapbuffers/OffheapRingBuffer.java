@@ -37,18 +37,6 @@ public final class OffheapRingBuffer implements RingBuffer<Object> {
   }
 
   @Override
-  public boolean isFull() {
-    // TODO
-    return false;
-  }
-
-  @Override
-  public boolean isEmpty() {
-    // TODO
-    return false;
-  }
-
-  @Override
   public void clear() throws RingBufferException {
     // TODO
   }
