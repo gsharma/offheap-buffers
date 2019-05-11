@@ -18,7 +18,8 @@ public interface RingBuffer<T> {
   void enqueue(T element) throws RingBufferException;
 
   /**
-   * Dequeue an element from this buffer
+   * Dequeue an element from this buffer. Note that as opposed to peek(), dequeue() removes the
+   * element.
    */
   T dequeue() throws RingBufferException;
 
@@ -36,16 +37,6 @@ public interface RingBuffer<T> {
    * Get the capacity of this buffer. Note that for post-construction, this is immutable.
    */
   int capacity();
-
-  /**
-   * Determine if the buffer is full.
-   */
-  // boolean isFull();
-
-  /**
-   * Determine if the buffer is empty.
-   */
-  // boolean isEmpty();
 
   /**
    * Delete elements if any, in the buffer.
