@@ -2,7 +2,7 @@ package com.github.offheapbuffers;
 
 import java.util.Arrays;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
+// import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import org.apache.logging.log4j.LogManager;
@@ -21,7 +21,7 @@ public final class HeapRingBuffer<T> implements RingBuffer<T> {
 
   private final ReentrantReadWriteLock superLock = new ReentrantReadWriteLock(true);
   private final WriteLock writeLock = superLock.writeLock();
-  private final ReadLock readLock = superLock.readLock();
+  // private final ReadLock readLock = superLock.readLock();
 
   private final RingBufferMode mode;
 
@@ -110,21 +110,21 @@ public final class HeapRingBuffer<T> implements RingBuffer<T> {
   @Override
   public T peek() throws RingBufferException {
     Object peeked = null;
-    if (readLock.tryLock()) {
-      try {
-        int nextReadCandidate = (readPointer + 1) % capacity;
-        if (nextReadCandidate < buffer.length) {
-          if (buffer[nextReadCandidate] != null) {
-            peeked = buffer[nextReadCandidate];
-          }
+    // if (readLock.tryLock()) {
+    try {
+      int nextReadCandidate = (readPointer + 1) % capacity;
+      if (nextReadCandidate < buffer.length) {
+        if (buffer[nextReadCandidate] != null) {
+          peeked = buffer[nextReadCandidate];
         }
-      } finally {
-        readLock.unlock();
       }
-    } else {
-      logger.error("Failed to acquire lock to peek into buffer");
-      throw new RingBufferException(Code.PEEK_LOCK_FAILED);
+    } finally {
+      // readLock.unlock();
     }
+    // } else {
+    // logger.error("Failed to acquire lock to peek into buffer");
+    // throw new RingBufferException(Code.PEEK_LOCK_FAILED);
+    // }
     return (T) peeked;
   }
 

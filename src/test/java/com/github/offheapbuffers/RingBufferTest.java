@@ -1,8 +1,11 @@
 package com.github.offheapbuffers;
 
 import static org.junit.Assert.assertEquals;
+// import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 /**
@@ -11,6 +14,7 @@ import org.junit.Test;
  * @author gaurav
  */
 public final class RingBufferTest {
+  private static final Logger logger = LogManager.getLogger(RingBufferTest.class.getSimpleName());
 
   @Test
   public void testHeapBufferPeek() throws RingBufferException {
@@ -120,6 +124,53 @@ public final class RingBufferTest {
       buffer.enqueue(iter);
     }
     assertEquals(buffer.capacity(), buffer.currentSize());
+  }
+
+  @Test
+  public void testSPSCBufferPeek() throws Exception {
+    final RingBuffer<Long> buffer = new HeapRingBuffer<Long>(RingBufferMode.OVERWRITE, 10);
+    assertEquals(0, buffer.currentSize());
+    final int chunk = 50;
+    final Thread filler = new Thread("filler") {
+      @Override
+      public void run() {
+        while (!interrupted()) {
+          try {
+            for (int iter = 0; iter < chunk; iter++) {
+              buffer.enqueue(System.currentTimeMillis());
+            }
+            logger.info("Filled {}", chunk);
+          } catch (RingBufferException problem) {
+            logger.error(problem);
+          }
+        }
+      }
+    };
+    final Thread peeker = new Thread("peeker") {
+      @Override
+      public void run() {
+        while (!interrupted()) {
+          try {
+            int peeked = 0;
+            for (int iter = 0; iter < chunk; iter++) {
+              if (buffer.peek() != null) {
+                peeked++;
+              }
+            }
+            logger.info("Peeked {}", peeked);
+          } catch (RingBufferException problem) {
+            logger.error(problem);
+          }
+        }
+      }
+    };
+    filler.start();
+    peeker.start();
+    Thread.sleep(10L);
+    filler.interrupt();
+    peeker.interrupt();
+    filler.join();
+    peeker.join();
   }
 
 }
