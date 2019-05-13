@@ -173,4 +173,38 @@ public final class RingBufferTest {
     peeker.join();
   }
 
+  @Test
+  public void testHeapBufferBlocking() throws RingBufferException {
+    int size = 5;
+    final RingBuffer<String> buffer = new HeapRingBuffer<String>(RingBufferMode.BLOCK, size);
+    assertEquals(0, buffer.currentSize());
+
+    // 1. load buffer
+    buffer.enqueue("1");
+    buffer.enqueue("2");
+    buffer.enqueue("3");
+    buffer.enqueue("4");
+    buffer.enqueue("5"); // writePointer to end
+    assertEquals(buffer.capacity(), buffer.currentSize());
+
+    // 2. unload and fill buffer as room becomes available
+    assertEquals("1", buffer.dequeue()); // readPointer at start
+    assertEquals(size - 1, buffer.currentSize());
+    buffer.enqueue("6");
+    assertEquals(buffer.capacity(), buffer.currentSize());
+    assertEquals("2", buffer.dequeue()); // keep moving readPointer
+    assertEquals(size - 1, buffer.currentSize());
+    buffer.enqueue("7"); // writePointer trails readPointer
+    assertEquals(buffer.capacity(), buffer.currentSize());
+    assertEquals("3", buffer.peek());
+
+    // 3. BLOCK mode shouldn't allow writePointer to clobber unread data
+    try {
+      buffer.enqueue("8");
+    } catch (RingBufferException problem) {
+      assertEquals(RingBufferException.Code.BLOCK_MODE_CLOBBER_ATTEMPT, problem.getCode());
+    }
+    // logger.info(buffer);
+  }
+
 }

@@ -63,8 +63,16 @@ public final class HeapRingBuffer<T> implements RingBuffer<T> {
             break;
           }
           case BLOCK: {
-            if (nextWriteCandidate == readPointer) {
-              // don't clobber unread data
+            // don't clobber unread data
+            if (buffer[nextWriteCandidate] == null) {
+              writePointer = nextWriteCandidate;
+              buffer[writePointer] = element;
+              if (currentSize < buffer.length) {
+                currentSize++;
+              }
+            } else {
+              logger.error("Failed to enqueue {} in BLOCK mode", element);
+              throw new RingBufferException(Code.BLOCK_MODE_CLOBBER_ATTEMPT);
             }
             break;
           }
@@ -107,6 +115,7 @@ public final class HeapRingBuffer<T> implements RingBuffer<T> {
     return (T) dequeued;
   }
 
+  // Planning to keep peek() lock-free
   @Override
   public T peek() throws RingBufferException {
     Object peeked = null;

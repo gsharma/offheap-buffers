@@ -42,6 +42,9 @@ public final class RingBufferException extends Exception {
     PEEK_LOCK_FAILED("Failed to acquire read lock for peeking into ring buffer"),
     // 4.
     CLEAR_LOCK_FAILED("Failed to acquire write lock for clearing ring buffer"),
+    // 5.
+    BLOCK_MODE_CLOBBER_ATTEMPT(
+        "Attempted to enqueue and clobber unread ring buffer data in BLOCK mode"),
     // n.
     UNKNOWN_FAILURE(
         "Ring buffer failed. Check exception stacktrace for more details of the failure");
