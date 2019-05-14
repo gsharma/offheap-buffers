@@ -43,4 +43,32 @@ public interface RingBuffer<T> {
    */
   void clear() throws RingBufferException;
 
+  /**
+   * A simple builder to let users use fluent APIs to build RingBuffer.
+   */
+  public final static class RingBufferBuilder<T> {
+    private RingBufferMode mode;
+    private int capacity;
+
+    public static RingBufferBuilder<?> newBuilder() {
+      return new RingBufferBuilder<>();
+    }
+
+    public RingBufferBuilder<T> mode(final RingBufferMode mode) {
+      this.mode = mode;
+      return this;
+    }
+
+    public RingBufferBuilder<T> capacity(final int capacity) {
+      this.capacity = capacity;
+      return this;
+    }
+
+    public RingBuffer<T> build() throws RingBufferException {
+      return new HeapRingBuffer<T>(mode, capacity);
+    }
+
+    private RingBufferBuilder() {}
+  }
+
 }

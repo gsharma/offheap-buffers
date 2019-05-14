@@ -11,8 +11,8 @@ import org.apache.logging.log4j.Logger;
 import com.github.offheapbuffers.RingBufferException.Code;
 
 /**
- * On-heap fixed-size simple ring-buffer implementation that's best used as a single producer single
- * consumer (spsc) ring-buffer.
+ * On-heap simple ring-buffer implementation that's best used as a single producer single consumer
+ * (spsc) ring-buffer.
  * 
  * @author gaurav
  */
