@@ -25,7 +25,6 @@ public final class HeapRingBuffer<T> implements RingBuffer<T> {
 
   private final RingBufferMode mode;
 
-  // private final Storage storage;
   private final int capacity;
   private volatile int currentSize;
 
@@ -37,13 +36,11 @@ public final class HeapRingBuffer<T> implements RingBuffer<T> {
 
   private final Object[] buffer;
 
-  public HeapRingBuffer(/* final Storage storage, */ final RingBufferMode mode, final int capacity)
-      throws RingBufferException {
+  public HeapRingBuffer(final RingBufferMode mode, final int capacity) throws RingBufferException {
     this.mode = mode;
     if (capacity <= 0) {
       throw new RingBufferException(Code.INVALID_BUFFER_SIZE);
     }
-    // this.storage = storage;
     this.capacity = capacity;
     buffer = new Object[capacity];
   }
