@@ -43,10 +43,12 @@ public final class HeapRingBuffer<T> implements RingBuffer<T> {
     }
     this.capacity = capacity;
     buffer = new Object[capacity];
+    logger.info("Created HeapRingBuffer, mode:{}, capacity:{}", mode, capacity);
   }
 
   @Override
   public void enqueue(final T element) throws RingBufferException {
+    logger.debug("Enqueue {}", element);
     if (writeLock.tryLock()) {
       try {
         final int nextWriteCandidate = (writePointer + 1) % capacity;
@@ -109,6 +111,7 @@ public final class HeapRingBuffer<T> implements RingBuffer<T> {
       logger.error("Failed to acquire lock to dequeue from buffer");
       throw new RingBufferException(Code.DEQUEUE_LOCK_FAILED);
     }
+    logger.debug("Dequeued {}", dequeued);
     return (T) dequeued;
   }
 
@@ -131,6 +134,7 @@ public final class HeapRingBuffer<T> implements RingBuffer<T> {
     // logger.error("Failed to acquire lock to peek into buffer");
     // throw new RingBufferException(Code.PEEK_LOCK_FAILED);
     // }
+    logger.debug("Peeked {}", peeked);
     return (T) peeked;
   }
 
@@ -146,6 +150,7 @@ public final class HeapRingBuffer<T> implements RingBuffer<T> {
 
   @Override
   public void clear() throws RingBufferException {
+    logger.debug("Clearing ring buffer");
     if (writeLock.tryLock()) {
       try {
         for (int iter = 0; iter < buffer.length; iter++) {
