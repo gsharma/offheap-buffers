@@ -130,7 +130,7 @@ public final class RingBufferTest {
 
   @Test
   public void testSPSCBufferPeek() throws Exception {
-    final RingBuffer<Long> buffer = new HeapRingBuffer<Long>(RingBufferMode.OVERWRITE, 10);
+    final RingBuffer<Long> buffer = new HeapRingBuffer<Long>(RingBufferMode.OVERWRITE, 15);
     assertEquals(0, buffer.currentSize());
     final int chunk = 50;
     final Thread filler = new Thread("filler") {
