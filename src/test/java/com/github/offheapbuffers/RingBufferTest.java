@@ -8,8 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
-import com.github.offheapbuffers.RingBuffer.RingBufferBuilder;
-
 /**
  * Tests for maintaining sanctity of the RingBuffer.
  * 
