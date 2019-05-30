@@ -128,7 +128,8 @@ public final class RingBufferTest {
 
   @Test
   public void testSPSCBufferPeek() throws Exception {
-    final RingBuffer<Long> buffer = new HeapRingBuffer<Long>(RingBufferMode.OVERWRITE, 15);
+    final int capacity = 15;
+    final RingBuffer<Long> buffer = new HeapRingBuffer<Long>(RingBufferMode.OVERWRITE, capacity);
     assertEquals(0, buffer.currentSize());
     final int chunk = 50;
     final Thread filler = new Thread("filler") {
@@ -171,6 +172,9 @@ public final class RingBufferTest {
     peeker.interrupt();
     filler.join();
     peeker.join();
+    assertEquals(capacity, buffer.currentSize());
+    buffer.clear();
+    assertEquals(0, buffer.currentSize());
   }
 
   @Test
