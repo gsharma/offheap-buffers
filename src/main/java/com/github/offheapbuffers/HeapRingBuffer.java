@@ -76,7 +76,9 @@ public final class HeapRingBuffer<T> implements RingBuffer<T> {
             break;
           }
           case RESIZE: {
-            break;
+            throw new UnsupportedOperationException(
+                "RESIZE mode is not yet supported for heap ring buffer");
+            // break;
           }
         }
       } finally {
