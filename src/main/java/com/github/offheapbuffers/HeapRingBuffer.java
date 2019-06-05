@@ -14,6 +14,8 @@ import com.github.offheapbuffers.RingBufferException.Code;
  * On-heap simple ring-buffer implementation that's best used as a single producer single consumer
  * (spsc) ring-buffer.
  * 
+ * TODO: add mask
+ * 
  * @author gaurav
  */
 public final class HeapRingBuffer<T> implements RingBuffer<T> {
